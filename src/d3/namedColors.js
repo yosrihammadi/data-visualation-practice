@@ -21,14 +21,11 @@ export default function NamedColors() {
   }, []);
 
   if (!data) return <pre>Loading...</pre>;
-  console.log(data[0]);
 
   return (
     <svg width={width} height={height}>
       <g transform={`translate(${centerX}, ${centerY})`}>
         {data.map((item, i) => {
-          console.log((i / data.length) * 2 * Math.PI);
-          console.log(((i + 1) / data.length) * 2 * Math.PI);
           return (
             <path
               fill={item["RGB hex value"]}

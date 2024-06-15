@@ -46,3 +46,21 @@ text {
   stroke-linejoin: round;
   stroke-linecap: round;
 }
+
+.world-marks .land {
+  fill: #1f9ba1;
+}
+
+.world-marks .interiors {
+  fill: none;
+  stroke: #ffffff31;
+}
+
+.world-marks .sphere {
+  fill: #f5f5f5;
+}
+
+.world-marks .graticules {
+  fill: none;
+  stroke: #dadada;
+}
