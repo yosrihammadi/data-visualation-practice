@@ -15,7 +15,7 @@ export const useData = ({ csvUrl, slice, formatRow = (item) => item }) => {
       }
       return setData(data);
     });
-  }, [csvUrl, formatRow, slice]);
+  }, [csvUrl, slice]);
 
   return data;
 };

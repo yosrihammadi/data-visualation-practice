@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { Dropdown } from "../components/Dropdown";
 import { useData } from "./useData";
 import { AxisBottom } from "./AxisBottom";
 import { IrisAxisLeft } from "./IrisAxisLeft";
-import { IrisMarks } from "./IrisMarks";
-import { extent, format, max, min, scaleLinear } from "d3";
+import { extent, format, scaleLinear, scaleOrdinal } from "d3";
+import { ColorMarks } from "./ColorMarks";
 
 const width = 960;
 const menuHeight = 75;
@@ -13,35 +11,19 @@ const margin = { top: 20, right: 30, bottom: 65, left: 90 };
 const xAxisLabelOffset = 50;
 const yAxisLabelOffset = 45;
 
-const attributes = [
-  { value: "sepal_length", label: "Sepal Length" },
-  { value: "sepal_width", label: "Sepal Width" },
-  { value: "petal_length", label: "Petal Length" },
-  { value: "petal_width", label: "Petal Width" },
-  { value: "species", label: "Species" },
-];
-
-const getLabel = (value) => {
-  for (const attribute of attributes) {
-    if (attribute.value === value) {
-      return attribute.label;
-    }
-  }
-};
 const csvUrl =
   "https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/639388c2cbc2120a14dcf466e85730eb8be498bb/iris.csv";
 
 export const ScatterPlot = () => {
   const data = useData({ csvUrl });
-  const initalXAttribute = "petal_length";
-  const [xAttribute, setXAttribute] = useState(initalXAttribute);
-  const xAxisLabel = getLabel(xAttribute);
-  const xValue = (d) => d[xAttribute];
+  const xAxisLabel = "Petal Length";
+  const xValue = (d) => d.petal_length;
 
-  const initalYAttribute = "sepal_length";
-  const [yAttribute, setYAttribute] = useState(initalYAttribute);
-  const yAxisLabel = getLabel(yAttribute);
-  const yValue = (d) => d[yAttribute];
+  const yAxisLabel = "Petal Length";
+  const yValue = (d) => d.sepal_width;
+
+  console.log(data);
+  const colorValue = (d) => d.species;
 
   if (!data) return <div>Loading...</div>;
 
@@ -59,22 +41,27 @@ export const ScatterPlot = () => {
     .domain(extent(data, yValue))
     .range([innerHeight, 0])
     .nice();
+
+  const colorScale = scaleOrdinal()
+    .domain(data.map(colorValue))
+    .range(["#E6842A", "#137B80", "#8E6C8A"]);
+
   return (
-    <div>
-      <label for="x-select">X:</label>
-      <Dropdown
-        id="x-select"
-        options={attributes}
-        onSelectedValueChange={setXAttribute}
-        selectedValue={xAttribute}
-      />
-      <label for="y-select">Y:</label>
-      <Dropdown
-        id="y-select"
-        options={attributes}
-        onSelectedValueChange={setYAttribute}
-        selectedValue={yAttribute}
-      />
+    <>
+      {/* <div className="menu-container">
+        <label for="x-select">X:</label>
+        <ReactDropdown
+          options={attributes}
+          value={xAttribute}
+          onChange={({ value }) => setXAttribute(value)}
+        />
+        <label for="y-select">Y:</label>
+        <ReactDropdown
+          options={attributes}
+          value={yAttribute}
+          onChange={({ value }) => setYAttribute(value)}
+        />
+      </div> */}
       <svg width={width} height={height}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           <AxisBottom
@@ -105,17 +92,19 @@ export const ScatterPlot = () => {
           >
             {xAxisLabel}
           </text>
-          <IrisMarks
+          <ColorMarks
             data={data}
             xScale={xScale}
             yScale={yScale}
             xValue={xValue}
             yValue={yValue}
             tooltipFormat={xAxisTickFormat}
-            circleRadius={7}
+            circleRadius={6}
+            colorScale={colorScale}
+            colorValue={colorValue}
           />
         </g>
       </svg>
-    </div>
+    </>
   );
 };

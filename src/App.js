@@ -5,6 +5,7 @@ import TemperatureLineChart from "./d3/TemperatureLineChart";
 import CountryChart from "./d3/countryChart";
 import NamedColors from "./d3/namedColors";
 import { Worldmap } from "./d3/worldmap/Worldmap";
+import "react-dropdown/style.css";
 
 function App() {
   return (
