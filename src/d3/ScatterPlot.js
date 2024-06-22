@@ -3,26 +3,30 @@ import { AxisBottom } from "./AxisBottom";
 import { IrisAxisLeft } from "./IrisAxisLeft";
 import { extent, format, scaleLinear, scaleOrdinal } from "d3";
 import { ColorMarks } from "./ColorMarks";
+import { ColorLegend } from "./ColorLegend";
 
 const width = 960;
 const menuHeight = 75;
 const height = 720 - menuHeight;
-const margin = { top: 20, right: 30, bottom: 65, left: 90 };
+const margin = { top: 20, right: 200, bottom: 65, left: 90 };
 const xAxisLabelOffset = 50;
 const yAxisLabelOffset = 45;
+const circleRadius = 6;
 
 const csvUrl =
   "https://gist.githubusercontent.com/curran/a08a1080b88344b0c8a7/raw/639388c2cbc2120a14dcf466e85730eb8be498bb/iris.csv";
 
 export const ScatterPlot = () => {
   const data = useData({ csvUrl });
+
+  const colorLegendLabel = "Species";
+
   const xAxisLabel = "Petal Length";
   const xValue = (d) => d.petal_length;
 
   const yAxisLabel = "Petal Length";
   const yValue = (d) => d.sepal_width;
 
-  console.log(data);
   const colorValue = (d) => d.species;
 
   if (!data) return <div>Loading...</div>;
@@ -92,6 +96,12 @@ export const ScatterPlot = () => {
           >
             {xAxisLabel}
           </text>
+          <g transform={`translate(${innerWidth + 50}, 30)`}>
+            <text className="axis-label" textAnchor="middle" x={25} y={-20}>
+              {colorLegendLabel}
+            </text>
+            <ColorLegend colorScale={colorScale} tickSize={circleRadius} />
+          </g>
           <ColorMarks
             data={data}
             xScale={xScale}
@@ -99,7 +109,7 @@ export const ScatterPlot = () => {
             xValue={xValue}
             yValue={yValue}
             tooltipFormat={xAxisTickFormat}
-            circleRadius={6}
+            circleRadius={circleRadius}
             colorScale={colorScale}
             colorValue={colorValue}
           />
